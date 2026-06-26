@@ -15,6 +15,11 @@ const app = express();
 
 // Middleware
 app.use(cors());
+// app.use(cors({
+//   origin: '*',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   credentials: true
+// }));
 app.use(express.json());
 
 // Mount Routes
@@ -22,6 +27,9 @@ app.use('/api/students', crudRoutes);
 app.use('/api/chat', aiRoutes);
 
 // Health check endpoint
+app.get("/",(req, res)=>{
+  res.send('  <h1 style="color:white; font-family:Arial, sans-serif; font-size:48px; background:rgba(255,255,255,0.2); padding:20px 40px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.2);"> Hi!</h1>')
+})
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Smart Admin Dashboard API is running.' });
 });
