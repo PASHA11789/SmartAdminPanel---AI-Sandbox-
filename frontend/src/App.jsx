@@ -32,7 +32,7 @@ const App = () => {
     setQueryResults(null);
     setActiveQueryText(null);
     try {
-      const response = await axios.get(API_BASE_URL);
+      const response = await axios.get(`${API_BASE_URL}/api/students`);
       setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
