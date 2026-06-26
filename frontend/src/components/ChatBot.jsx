@@ -26,8 +26,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
 
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom of messages
-  const scrollToBottom = () => {
+const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -52,15 +51,17 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
     setErrorConfig(null);
 
     try {
-      // POST request to backend AI Route
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/chat`, {
+      
+      const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const cleanApiUrl = rawApiUrl.replace(/\/$/, '').replace(/\/api\/students$/, '').replace(/\/students$/, '');
+      const response = await axios.post(`${cleanApiUrl}/api/chat`, {
         prompt: userMessage.text
       });
 
       const { success, dbMessage, explanation, command, students, mongooseQuery, affectedCount, queryResults } = response.data;
 
       if (success) {
-        // Sync the updated student list to parent state
+        
         if (students && onSyncStudents) {
           if (command && command.action === 'QUERY' && queryResults) {
             onSyncStudents(students, queryResults, userMessage.text);
@@ -74,7 +75,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
           sender: 'bot',
           text: explanation || dbMessage,
           timestamp: new Date(),
-          command: command, // Expose parsed JSON command to UI
+          command: command, 
           mongooseQuery: mongooseQuery,
           affectedCount: affectedCount
         };
@@ -118,7 +119,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
 
   return (
     <>
-      {/* Mobile backdrop */}
+      
       {isMobileOpen && (
         <div 
           className="fixed inset-0 bg-black/60 z-40 lg:hidden animate-[fadeIn_0.2s_ease-out]" 
@@ -130,7 +131,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
         fixed inset-y-0 right-0 z-50 w-80 sm:w-96 lg:relative lg:translate-x-0 lg:w-96 lg:border-l lg:border-slate-800 ${
           isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         }`}>
-        {/* Bot Header */}
+        
         <div className="p-4 border-b border-slate-800 bg-slate-950/40 flex items-center justify-between font-mono">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-emerald-600/10 border border-emerald-500/30 flex items-center justify-center glow-emerald animate-pulse-slow">
@@ -162,8 +163,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
           </div>
         </div>
 
-      {/* Messages Logs */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+<div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
         {messages.map((msg) => {
           const isBot = msg.sender === 'bot';
           return (
@@ -173,13 +173,12 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
                 isBot ? 'self-start' : 'self-end items-end'
               }`}
             >
-              {/* Sender label */}
+              
               <span className="text-[9px] text-slate-500 mb-1 font-semibold tracking-wider font-mono">
                 {isBot ? 'AI COPROCESSOR' : 'ROOT OPERATOR'}
               </span>
 
-              {/* Message bubble */}
-              <div className={`p-3.5 rounded-2xl text-xs leading-relaxed border ${
+<div className={`p-3.5 rounded-2xl text-xs leading-relaxed border ${
                 isBot
                   ? msg.isError 
                     ? 'bg-rose-950/20 border-rose-500/20 text-rose-300'
@@ -190,7 +189,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
 
                 {isBot && msg.command && (
                   <div className="mt-3 pt-3 border-t border-slate-800/80 flex flex-col gap-2">
-                    {/* Header */}
+                    
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">
                         <Terminal className="w-3.5 h-3.5 text-emerald-400" /> Transaction Log
@@ -205,8 +204,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
                       </span>
                     </div>
 
-                    {/* Mongoose equivalent statement */}
-                    {msg.mongooseQuery && (
+{msg.mongooseQuery && (
                       <div className="flex flex-col gap-1">
                         <span className="text-[9px] font-bold text-slate-500 font-mono">Mongoose Code:</span>
                         <div className="bg-slate-950 p-2 rounded-lg border border-slate-900 font-mono text-[9px] text-emerald-400/90 overflow-x-auto whitespace-pre">
@@ -215,8 +213,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
                       </div>
                     )}
 
-                    {/* Filter and Payload */}
-                    <div className="grid grid-cols-2 gap-2 mt-0.5">
+<div className="grid grid-cols-2 gap-2 mt-0.5">
                       {msg.command.filter && Object.keys(msg.command.filter).length > 0 && (
                         <div className="flex flex-col gap-1">
                           <span className="text-[9px] font-bold text-slate-500 font-mono">Query Filter:</span>
@@ -235,8 +232,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
                       )}
                     </div>
 
-                    {/* Metrics / Status */}
-                    <div className="flex items-center justify-between text-[9px] text-slate-500 font-semibold font-mono bg-slate-900/40 border border-slate-900 px-2 py-1.5 rounded-lg mt-1">
+<div className="flex items-center justify-between text-[9px] text-slate-500 font-semibold font-mono bg-slate-900/40 border border-slate-900 px-2 py-1.5 rounded-lg mt-1">
                       <div className="flex items-center gap-1">
                         <Database className="w-3 h-3 text-slate-400" /> Target: <span className="text-slate-300">students</span>
                       </div>
@@ -251,8 +247,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
           );
         })}
 
-        {/* Loading / Typing indicator */}
-        {isLoading && (
+{isLoading && (
           <div className="flex flex-col self-start max-w-[80%]">
             <span className="text-[9px] text-slate-500 mb-1 font-semibold font-mono">AI COPROCESSOR</span>
             <div className="bg-slate-900/50 border border-slate-800/80 p-3 rounded-2xl flex items-center gap-2">
@@ -268,8 +263,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggested Queries */}
-      {messages.length === 1 && (
+{messages.length === 1 && (
         <div className="px-4 py-2 border-t border-slate-900 flex flex-col gap-2 bg-slate-950/45">
           <p className="text-[10px] font-bold text-slate-500 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Suggested Operations
@@ -288,8 +282,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
         </div>
       )}
 
-      {/* Warning Box for config missing */}
-      {errorConfig && (
+{errorConfig && (
         <div className="mx-4 mb-2 p-3 bg-amber-950/20 border border-amber-500/20 rounded-xl flex items-start gap-2 text-amber-400 text-[11px]">
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <div>
@@ -299,8 +292,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
         </div>
       )}
 
-      {/* Input Form */}
-      <form 
+<form 
         onSubmit={handleSendMessage}
         className="p-4 border-t border-slate-800 bg-slate-950/30 flex gap-2"
       >

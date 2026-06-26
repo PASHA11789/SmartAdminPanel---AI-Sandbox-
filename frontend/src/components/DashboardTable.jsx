@@ -16,15 +16,13 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [classFilter, setClassFilter] = useState('All');
-  
-  // Modal states
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentStudent, setCurrentStudent] = useState(null);
   const [infoOpen, setInfoOpen] = useState(true);
 
-  // Form states
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     rollNo: '',
     name: '',
     studentClass: '',
@@ -34,14 +32,11 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
   });
   const [formError, setFormError] = useState('');
 
-  // Extract unique classes for the class filter
-  const uniqueClasses = ['All', ...new Set(students.map(s => s.studentClass))];
+const uniqueClasses = ['All', ...new Set(students.map(s => s.studentClass))];
 
-  // Determine active student list (full sandbox or filtered by AI query results)
-  const activeStudentList = queryResults !== null ? queryResults : students;
+const activeStudentList = queryResults !== null ? queryResults : students;
 
-  // Filtering students
-  const filteredStudents = activeStudentList.filter(student => {
+const filteredStudents = activeStudentList.filter(student => {
     const matchesSearch = 
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.rollNo.includes(searchTerm) ||
@@ -94,8 +89,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
       return;
     }
 
-    // Check duplicate rollNo locally before calling parent
-    const exists = students.some(s => s.rollNo === formData.rollNo);
+const exists = students.some(s => s.rollNo === formData.rollNo);
     if (exists) {
       setFormError(`Student with Roll No ${formData.rollNo} already exists.`);
       return;
@@ -118,8 +112,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
       return;
     }
 
-    // Check duplicate rollNo locally
-    const exists = students.some(s => s.rollNo === formData.rollNo && s._id !== currentStudent._id);
+const exists = students.some(s => s.rollNo === formData.rollNo && s._id !== currentStudent._id);
     if (exists) {
       setFormError(`Student with Roll No ${formData.rollNo} already exists.`);
       return;
@@ -133,15 +126,14 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
     }
   };
 
-  // Metrics calculations
-  const totalStudents = students.length;
+const totalStudents = students.length;
   const presentToday = students.filter(s => s.attendanceStatus === 'Present').length;
   const absentToday = students.filter(s => s.attendanceStatus === 'Absent').length;
   const attendanceRate = totalStudents > 0 ? Math.round((presentToday / totalStudents) * 100) : 0;
 
   return (
     <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-6">
-      {/* Top Banner / Actions */}
+      
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
@@ -161,8 +153,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div className="p-4 bg-white border border-slate-200 rounded-xl flex flex-col gap-1 font-mono shadow-sm">
           <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Total Students</span>
           <span className="text-3xl font-extrabold text-slate-900">{totalStudents}</span>
@@ -189,8 +180,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
         </div>
       </div>
 
-      {/* Active Query Banner */}
-      {activeQueryText && (
+{activeQueryText && (
         <div className="p-4 bg-emerald-50 border border-emerald-250 text-emerald-850 rounded-2xl flex items-center justify-between shadow-sm animate-[fadeIn_0.2s_ease-out]">
           <div className="flex items-center gap-2.5 text-xs font-semibold">
             <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse" />
@@ -205,9 +195,8 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
         </div>
       )}
 
-      {/* Filters Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white border border-slate-200 rounded-2xl shadow-sm">
-        {/* Search */}
+<div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white border border-slate-200 rounded-2xl shadow-sm">
+        
         <div className="md:col-span-2 relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
           <input
@@ -219,8 +208,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
           />
         </div>
 
-        {/* Status Filter */}
-        <div className="relative">
+<div className="relative">
           <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
           <select
             value={statusFilter}
@@ -233,8 +221,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
           </select>
         </div>
 
-        {/* Class Filter */}
-        <div className="relative">
+<div className="relative">
           <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400" />
           <select
             value={classFilter}
@@ -249,8 +236,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
         </div>
       </div>
 
-      {/* Data Table */}
-      <div className="flex-1 bg-slate-900 rounded-2xl overflow-hidden flex flex-col border border-slate-800/80 shadow-md">
+<div className="flex-1 bg-slate-900 rounded-2xl overflow-hidden flex flex-col border border-slate-800/80 shadow-md">
         <div className="overflow-x-auto flex-1">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -341,8 +327,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
         </div>
       </div>
 
-      {/* ADD MODAL */}
-      {isAddModalOpen && (
+{isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg glass-panel rounded-2xl shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
             <div className="flex justify-between items-center px-6 py-4.5 border-b border-slate-800">
@@ -478,8 +463,7 @@ const DashboardTable = ({ students, queryResults, activeQueryText, onClearQuery,
         </div>
       )}
 
-      {/* EDIT MODAL */}
-      {isEditModalOpen && (
+{isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
           <div className="w-full max-w-lg glass-panel rounded-2xl shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
             <div className="flex justify-between items-center px-6 py-4.5 border-b border-slate-800">

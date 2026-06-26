@@ -6,7 +6,11 @@ import ChatBot from './components/ChatBot';
 import AboutProject from './components/AboutProject';
 import { AlertCircle, RefreshCw, ServerOff, Menu, Bot, GraduationCap } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const cleanApiUrl = rawApiUrl.replace(/\/$/, '').replace(/\/api\/students$/, '').replace(/\/students$/, '');
+
+const API_BASE_URL = `${cleanApiUrl}/api/students`;
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('sandbox');
@@ -19,20 +23,18 @@ const App = () => {
   const [queryResults, setQueryResults] = useState(null);
   const [activeQueryText, setActiveQueryText] = useState(null);
 
-  // Auto-close overlay drawers on tab switch
-  useEffect(() => {
+useEffect(() => {
     setIsSidebarOpen(false);
     setIsChatbotOpen(false);
   }, [activeTab]);
 
-  // Fetch all students on component mount
-  const fetchStudents = async () => {
+const fetchStudents = async () => {
     setLoading(true);
     setServerError(false);
     setQueryResults(null);
     setActiveQueryText(null);
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/students`);
+      const response = await axios.get(API_BASE_URL);
       setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -46,16 +48,14 @@ const App = () => {
     fetchStudents();
   }, []);
 
-  // Show a temporary system message toast
-  const triggerSystemMessage = (msg, isError = false) => {
+const triggerSystemMessage = (msg, isError = false) => {
     setSystemMessage({ text: msg, isError });
     setTimeout(() => {
       setSystemMessage(null);
     }, 4000);
   };
 
-  // Manual: Add Student
-  const handleAddStudent = async (studentData) => {
+const handleAddStudent = async (studentData) => {
     try {
       const response = await axios.post(API_BASE_URL, studentData);
       setStudents(prev => [...prev, response.data].sort((a, b) => a.rollNo.localeCompare(b.rollNo)));
@@ -69,8 +69,7 @@ const App = () => {
     }
   };
 
-  // Manual: Edit Student
-  const handleEditStudent = async (id, updatedData) => {
+const handleEditStudent = async (id, updatedData) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/${id}`, updatedData);
       setStudents(prev => 
@@ -87,8 +86,7 @@ const App = () => {
     }
   };
 
-  // Manual: Delete Student
-  const handleDeleteStudent = async (id) => {
+const handleDeleteStudent = async (id) => {
     if (!window.confirm('Are you sure you want to delete this student record?')) return;
     
     try {
@@ -101,8 +99,7 @@ const App = () => {
     }
   };
 
-  // Manual: Reset Sandbox Data
-  const handleResetData = async () => {
+const handleResetData = async () => {
     if (!window.confirm('WARNING: This will clear the current database and restore the default seed dataset. Are you sure you want to proceed?')) {
       return;
     }
@@ -110,7 +107,7 @@ const App = () => {
     setLoading(true);
     try {
       const response = await axios.post(`${API_BASE_URL}/reset`);
-      // Update students list
+      
       setStudents(response.data.students);
       triggerSystemMessage(response.data.message || 'Database reset successfully.');
     } catch (error) {
@@ -122,8 +119,7 @@ const App = () => {
     }
   };
 
-  // AI Sync Callback: Updates state directly from ChatBot responses
-  const handleSyncStudents = (updatedList, results = null, queryText = null) => {
+const handleSyncStudents = (updatedList, results = null, queryText = null) => {
     setStudents(updatedList.sort((a, b) => a.rollNo.localeCompare(b.rollNo)));
     setQueryResults(results);
     setActiveQueryText(queryText);
@@ -132,7 +128,7 @@ const App = () => {
 
   return (
     <div className="h-screen w-screen bg-white text-slate-900 flex overflow-hidden select-none relative">
-      {/* Toast Notification Panel */}
+      
       {systemMessage && (
         <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl border shadow-xl flex items-center gap-2.5 animate-[fadeIn_0.2s_ease-out] text-xs font-semibold ${
           systemMessage.isError
@@ -144,16 +140,14 @@ const App = () => {
         </div>
       )}
 
-      {/* Sidebar Mobile Backdrop Overlay */}
-      {isSidebarOpen && (
+{isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/60 z-40 md:hidden animate-[fadeIn_0.2s_ease-out]" 
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* 1. Left Sidebar */}
-      <Sidebar 
+<Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         onResetData={handleResetData} 
@@ -161,9 +155,8 @@ const App = () => {
         onClose={() => setIsSidebarOpen(false)}
       />
 
-      {/* 2. Central Workspace Area */}
-      <main className="flex-1 flex flex-col min-w-0 bg-white relative">
-        {/* Mobile Header Bar */}
+<main className="flex-1 flex flex-col min-w-0 bg-white relative">
+        
         <div className="md:hidden flex items-center justify-between px-4 py-3 bg-slate-900 text-white border-b border-slate-800 shrink-0">
           <button 
             onClick={() => setIsSidebarOpen(true)}
@@ -188,9 +181,8 @@ const App = () => {
             <div className="w-8 h-8" />
           )}
         </div>
-       
-        {/* Content routing based on sidebar active tab */}
-        {serverError ? (
+
+{serverError ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center p-6">
             <div className="w-14 h-14 rounded-2xl bg-rose-950/20 border border-rose-500/20 flex items-center justify-center text-rose-400 glow-rose animate-bounce">
               <ServerOff className="w-7 h-7" />
@@ -198,7 +190,7 @@ const App = () => {
             <div>
               <h3 className="text-lg font-bold text-slate-200">Database Server Connection Failed</h3>
               <p className="text-sm text-slate-500 max-w-sm mt-1">
-                Unable to query backend API. Please make sure the backend Express server is running on <code className="bg-slate-900 text-slate-300 px-1 py-0.5 rounded text-xs font-mono">{import.meta.env.VITE_API_URL}</code>.
+                Unable to query backend API. Please make sure the backend Express server is running on <code className="bg-slate-900 text-slate-300 px-1 py-0.5 rounded text-xs font-mono">{cleanApiUrl}</code>.
               </p>
             </div>
             <button
@@ -232,8 +224,7 @@ const App = () => {
         )}
       </main>
 
-      {/* 3. Right Floating AI chatbot Panel */}
-      {activeTab === 'sandbox' && (
+{activeTab === 'sandbox' && (
         <ChatBot 
           onSyncStudents={handleSyncStudents} 
           isMobileOpen={isChatbotOpen}
@@ -241,8 +232,7 @@ const App = () => {
         />
       )}
 
-      {/* Floating Chatbot Toggle FAB (visible below lg breakpoint) */}
-      {activeTab === 'sandbox' && (
+{activeTab === 'sandbox' && (
         <button
           onClick={() => setIsChatbotOpen(true)}
           className="lg:hidden fixed bottom-6 right-6 z-30 bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white p-4 rounded-full shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/40 glow-emerald transition-all duration-300 transform hover:scale-110 active:scale-95 animate-[bounce_3s_infinite]"

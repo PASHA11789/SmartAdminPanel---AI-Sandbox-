@@ -3,7 +3,6 @@ import Student from '../models/Student.js';
 
 const router = express.Router();
 
-// GET all students
 router.get('/', async (req, res) => {
   try {
     const students = await Student.find({}).sort({ rollNo: 1 });
@@ -13,13 +12,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST new student
 router.post('/', async (req, res) => {
   try {
     const { rollNo, name, studentClass, section, attendanceStatus, balance } = req.body;
-    
-    // Check if rollNo already exists
-    const exists = await Student.findOne({ rollNo });
+
+const exists = await Student.findOne({ rollNo });
     if (exists) {
       return res.status(400).json({ message: `Student with Roll No ${rollNo} already exists.` });
     }
@@ -40,13 +37,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update a student by ID
 router.put('/:id', async (req, res) => {
   try {
     const { rollNo, name, studentClass, section, attendanceStatus, balance } = req.body;
-    
-    // If rollNo is updated, make sure it is not taken by another student
-    if (rollNo) {
+
+if (rollNo) {
       const exists = await Student.findOne({ rollNo, _id: { $ne: req.params.id } });
       if (exists) {
         return res.status(400).json({ message: `Student with Roll No ${rollNo} already exists.` });
@@ -74,7 +69,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE student by ID
 router.delete('/:id', async (req, res) => {
   try {
     const student = await Student.findByIdAndDelete(req.params.id);
@@ -87,7 +81,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// POST reset sandbox data
 router.post('/reset', async (req, res) => {
   try {
     const sampleStudents = [
@@ -144,8 +137,7 @@ router.post('/reset', async (req, res) => {
     await Student.deleteMany({});
     await Student.insertMany(sampleStudents);
 
-    // Fetch the updated list to send back
-    const allStudents = await Student.find({}).sort({ rollNo: 1 });
+const allStudents = await Student.find({}).sort({ rollNo: 1 });
     res.json({
       message: 'Sandbox data reset successfully.',
       students: allStudents

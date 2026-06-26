@@ -4,7 +4,6 @@ import dns from 'dns';
 import Student from './models/Student.js';
 import connectDB from './config/db.js';
 
-// Force DNS resolution using public DNS resolvers to handle Atlas connection issues
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 dotenv.config();
@@ -62,20 +61,17 @@ const sampleStudents = [
 
 const seedDatabase = async () => {
   try {
-    // Connect to database
+    
     await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smart_admin');
     console.log('Connected to MongoDB for seeding...');
 
-    // Clear existing students
-    await Student.deleteMany({});
+await Student.deleteMany({});
     console.log('Cleared existing student records.');
 
-    // Insert sample students
-    const createdStudents = await Student.insertMany(sampleStudents);
+const createdStudents = await Student.insertMany(sampleStudents);
     console.log(`Successfully seeded ${createdStudents.length} student records.`);
 
-    // Close connection
-    await mongoose.connection.close();
+await mongoose.connection.close();
     console.log('Database connection closed.');
     process.exit(0);
   } catch (error) {

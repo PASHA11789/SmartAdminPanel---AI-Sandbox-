@@ -66,7 +66,7 @@ const AboutProject = () => {
 
   return (
     <div className="flex-1 p-8 overflow-y-auto flex flex-col gap-10 bg-white animate-[fadeIn_0.2s_ease-out]">
-      {/* Page Title Header */}
+      
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2.5">
@@ -81,13 +81,11 @@ const AboutProject = () => {
         </div>
       </div>
 
-      {/* Main Sandbox Overview Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative flex flex-col gap-6">
-        {/* Background glowing design */}
+<div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative flex flex-col gap-6">
+        
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
 
-        {/* Card Title */}
-        <div className="flex items-start gap-3.5 pb-4 border-b border-slate-100">
+<div className="flex items-start gap-3.5 pb-4 border-b border-slate-100">
           <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shrink-0">
             <Sparkles className="w-5 h-5 text-emerald-600" />
           </div>
@@ -101,16 +99,14 @@ const AboutProject = () => {
           </div>
         </div>
 
-        {/* Overview text */}
-        <p className="text-sm text-slate-600 leading-relaxed max-w-4xl">
+<p className="text-sm text-slate-600 leading-relaxed max-w-4xl">
           This dashboard operates as an interactive database sandbox designed to research prompt-to-database interfaces.
           By combining a standard CRUD interface with a Groq-powered natural language coprocessor, users can execute database queries, updates, and deletes by simply talking to the assistant.
           The Mongoose actions are made fully transparent in a transaction console to study LLM accuracy and database driver interactions safely.
         </p>
       </div>
 
-      {/* Section 1: Tech Stack */}
-      <div className="flex flex-col gap-4">
+<div className="flex flex-col gap-4">
         <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 font-mono">
           <Code2 className="w-5 h-5 text-slate-700" /> 🛠️ The Tech Stack Blueprint
         </h3>
@@ -139,8 +135,7 @@ const AboutProject = () => {
         </div>
       </div>
 
-      {/* Section 2: Lifecycle Workflow */}
-      <div className="flex flex-col gap-4">
+<div className="flex flex-col gap-4">
         <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 font-mono">
           <Workflow className="w-5 h-5 text-slate-700" /> ⚙️ Translation Lifecycle
         </h3>
@@ -158,9 +153,8 @@ const AboutProject = () => {
                   <h4 className="font-bold text-xs text-slate-850 uppercase tracking-wider">{step.title}</h4>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed pl-1.5">{step.desc}</p>
-                
-                {/* Visual arrow indicator between columns on desktop */}
-                {idx < 3 && (
+
+{idx < 3 && (
                   <div className="hidden md:block absolute top-3.5 -right-3.5 transform translate-x-1/2 text-slate-300">
                     <ArrowRight className="w-4 h-4" />
                   </div>
@@ -171,8 +165,7 @@ const AboutProject = () => {
         </div>
       </div>
 
-      {/* Section 3: Authorship */}
-      <div className="flex flex-col gap-4">
+<div className="flex flex-col gap-4">
         <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 font-mono">
           <User className="w-5 h-5 text-slate-700" /> 👤 Authorship & Credentials
         </h3>
@@ -180,7 +173,7 @@ const AboutProject = () => {
           Developer details and authorization clearance:
         </p>
         <div className="p-6 bg-slate-900 border border-slate-850/80 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm relative overflow-hidden">
-          {/* Background decoration */}
+          
           <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl" />
           
           <div className="flex items-center gap-4">

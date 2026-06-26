@@ -4,7 +4,6 @@ import Student from '../models/Student.js';
 
 const router = express.Router();
 
-// System prompt detailing schema and demanding structured JSON response
 const SYSTEM_PROMPT = `You are the AI Database Interface (NLIDB) for a "Smart Admin Dashboard" student database.
 Your job is to translate user natural language queries or instructions into structured database commands.
 
@@ -99,16 +98,14 @@ router.post('/', async (req, res) => {
     let mongooseQuery = '';
     let affectedCount = 0;
 
-    // Execute Mongoose operations based on the parsed JSON command
-    switch (command.action) {
+switch (command.action) {
       case 'CREATE': {
         const { rollNo, name, studentClass, section, attendanceStatus, balance } = command.updateData || {};
         if (!rollNo || !name) {
           throw new Error('Roll No and Name are required to add a student.');
         }
 
-        // Check if student exists
-        const existingStudent = await Student.findOne({ rollNo });
+const existingStudent = await Student.findOne({ rollNo });
         if (existingStudent) {
           dbMessage = `Student with Roll No ${rollNo} already exists. No changes made.`;
           mongooseQuery = `await Student.findOne({ rollNo: "${rollNo}" }); // Duplicate check found record`;
@@ -135,8 +132,7 @@ router.post('/', async (req, res) => {
         const filter = command.filter || {};
         const updateData = command.updateData || {};
 
-        // Run update on MongoDB
-        let updateQuery = {};
+let updateQuery = {};
         const containsOperators = Object.keys(updateData).some(key => key.startsWith('$'));
         if (containsOperators) {
           updateQuery = updateData;
@@ -173,8 +169,7 @@ router.post('/', async (req, res) => {
         throw new Error(`Unsupported database action: ${command.action}`);
     }
 
-    // Fetch the latest list of all students to return to the frontend to keep states synced
-    const allStudents = await Student.find({}).sort({ rollNo: 1 });
+const allStudents = await Student.find({}).sort({ rollNo: 1 });
 
     res.json({
       success: true,

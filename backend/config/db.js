@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
 
-// Force DNS resolution using public DNS resolvers to handle Atlas connection issues
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const connectDB = async () => {

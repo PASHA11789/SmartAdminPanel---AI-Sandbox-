@@ -9,7 +9,6 @@
   }
 }
 
-/* Glassmorphism scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -29,7 +28,6 @@
   background: rgba(99, 102, 241, 0.6);
 }
 
-/* Custom Glassmorphism Card Utilities */
 .glass-panel {
   background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(16px);
