@@ -53,7 +53,7 @@ const ChatBot = ({ onSyncStudents, isMobileOpen, onCloseMobile }) => {
 
     try {
       // POST request to backend AI Route
-      const response = await axios.post('http://localhost:5000/api/chat', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/chat`, {
         prompt: userMessage.text
       });
 

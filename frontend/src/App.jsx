@@ -6,7 +6,7 @@ import ChatBot from './components/ChatBot';
 import AboutProject from './components/AboutProject';
 import { AlertCircle, RefreshCw, ServerOff, Menu, Bot, GraduationCap } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000/api/students';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('sandbox');
@@ -198,7 +198,7 @@ const App = () => {
             <div>
               <h3 className="text-lg font-bold text-slate-200">Database Server Connection Failed</h3>
               <p className="text-sm text-slate-500 max-w-sm mt-1">
-                Unable to query backend API. Please make sure the backend Express server is running on <code className="bg-slate-900 text-slate-300 px-1 py-0.5 rounded text-xs font-mono">http://localhost:5000</code>.
+                Unable to query backend API. Please make sure the backend Express server is running on <code className="bg-slate-900 text-slate-300 px-1 py-0.5 rounded text-xs font-mono">{import.meta.env.VITE_API_URL}</code>.
               </p>
             </div>
             <button
